@@ -10,10 +10,10 @@ import EditPost from './home/editPost';
 import MyPost from './home/myPosts';
 
 // Private route component
-const PrivateRoute = ({ isAuthenticated }) => {
+const PrivateRoute = ({ isAuthenticated, setisAuthenticated }) => {
   return isAuthenticated ? (
     <>
-      <Header />
+      <Header setisAuthenticated={setisAuthenticated} />
       <Outlet />
     </>
   ) : (
@@ -22,14 +22,27 @@ const PrivateRoute = ({ isAuthenticated }) => {
 };
 
 function App() {
-  const [isAuthenticated, setisAuthenticated] = useState(false);
+  const [isAuthenticated, setisAuthenticated] = useState(() => {
+    const token = localStorage.getItem("accessToken");
+    return token !== null;
+  });
 
   return (
     <div>
       <Routes>
-        <Route path='/login' element={<Login setisAuthenticated={setisAuthenticated} />} />
+        <Route
+          path='/login'
+          element={<Login setisAuthenticated={setisAuthenticated} />}
+        />
 
-        <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
+        <Route
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              setisAuthenticated={setisAuthenticated}
+            />
+          }
+        >
           <Route path='/' element={<Home />} />
           <Route path='/create' element={<Create />} />
           <Route path='/posts/:id' element={<ReadMore />} />

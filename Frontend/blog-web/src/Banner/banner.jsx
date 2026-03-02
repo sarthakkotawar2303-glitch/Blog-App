@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
+import bannerImage from '../assets/bannerImage.png';
+
 
 const Banner = () => {
   const imageUrl =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBjcc0etEoEnQFGfogr1ySkkV3Vatwvi8qCg&s";
 
   return (
-    <div className="relative w-full h-[45vh] md:h-[70vh] lg:h-[80vh]">
+    <div className="relative w-full h-[25vh] md:h-[50vh] lg:h-[50vh]">
       {/* Background Image */}
       <img
-        src={imageUrl}
+        src={bannerImage}
         alt="Blog Banner"
         className="w-full h-full object-cover brightness-90"
       />

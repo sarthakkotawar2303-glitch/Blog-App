@@ -34,6 +34,7 @@ const Login = ({ setisAuthenticated }) => {
       setError('');
       setSignUp(signUpInitialValues);
       setIsLogin('login');
+      navigate("/")
     } else {
       setError('Something went wrong! Please try');
     }
@@ -43,23 +44,15 @@ const Login = ({ setisAuthenticated }) => {
     e.preventDefault();
     const response = await API.userLogin(login);
     if (response.isSuccess) {
-      setError('');
-      sessionStorage.setItem("accessToken", response.data.accessToken);
-      sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
-      setAccessToken(response.data.accessToken);
 
-      context.setAccount({
-        id: response.data.user._id,
-        username: response.data.user.username,
-        email: response.data.user.email
-      });
-
-      setisAuthenticated(true);
-      navigate('/');
-    } else {
-      setError("Something went wrong! Please try again later");
+      localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        
+        
+        setisAuthenticated(true);
+        navigate('/');
     }
-  };
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
