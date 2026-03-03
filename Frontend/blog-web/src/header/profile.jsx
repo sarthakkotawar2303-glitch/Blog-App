@@ -9,7 +9,6 @@ const Profile = ({ setisAuthenticated }) => {
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
-  // Load user from localStorage on refresh
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && !account?.username) {
@@ -17,7 +16,6 @@ const Profile = ({ setisAuthenticated }) => {
     }
   }, [account, setAccount]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -25,21 +23,25 @@ const Profile = ({ setisAuthenticated }) => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
+    const wrapper = document.getElementById("page-wrapper");
+    if (wrapper) {
+      wrapper.classList.remove("animate-page-in");
+      wrapper.classList.add("animate-page-out");
+    }
 
-    setAccount({ id: "", username: "", email: "" });
-    setisAuthenticated(false);
-
-    navigate("/login");
+    setTimeout(() => {
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      setAccount({ id: "", username: "", email: "" });
+      setisAuthenticated(false);
+      navigate("/login", { replace: true });
+    }, 300);
   };
 
-  // Dynamic avatar letter
   const avatarLetter = account?.username
     ? account.username.charAt(0).toUpperCase()
     : account?.email
@@ -48,30 +50,20 @@ const Profile = ({ setisAuthenticated }) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      
-      {/* ✅ PERFECT ROUND AVATAR BUTTON */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="rounded-full"
-      >
+
+      <button onClick={() => setOpen(!open)} className="rounded-full">
         {avatarLetter}
       </button>
 
-      
-
       {open && (
         <div className="absolute right-0 mt-3 w-80 bg-gray-800 rounded-xl shadow-xl border border-gray-700 z-50 overflow-hidden">
-          
-          {/* User Info */}
+
           <div className="flex items-center gap-3 p-4 border-b border-gray-700">
-            
-            {/* Larger round avatar inside dropdown */}
-            <div className="w-12 h-12 flex items-center justify-center rounded-full 
-                            bg-gradient-to-r from-blue-600 to-indigo-600 
+            <div className="w-12 h-12 flex items-center justify-center rounded-full
+                            bg-gradient-to-r from-blue-600 to-indigo-600
                             text-white font-bold text-lg shadow">
               {avatarLetter}
             </div>
-
             <div className="flex flex-col">
               <span className="text-white font-semibold truncate">
                 {account?.username || "Guest User"}
@@ -82,7 +74,6 @@ const Profile = ({ setisAuthenticated }) => {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex flex-col divide-y divide-gray-700">
             {account?.username ? (
               <button
@@ -93,10 +84,11 @@ const Profile = ({ setisAuthenticated }) => {
               </button>
             ) : (
               <Link to="/login">
-                <button className="w-full px-4 py-3 text-left text-gray-200 hover:bg-gray-700 transition font-medium">
-                  Login
-                </button>
-              </Link>
+  <button className="w-full px-4 py-3 text-left text-gray-200 transition-colors duration-300 hover:bg-gray-800 font-medium">
+    Login
+  </button>
+</Link>
+
             )}
           </div>
 

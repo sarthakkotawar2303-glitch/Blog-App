@@ -7,7 +7,7 @@ const Header = ({ setisAuthenticated }) => {
 
   return (
     <nav className="flex items-center justify-between px-8 py-4 bg-gray-900 shadow-md">
-      {/* Logo */}
+    
       <div
         className="flex items-center gap-3 cursor-pointer"
         onClick={() => navigate("/")}
@@ -18,7 +18,7 @@ const Header = ({ setisAuthenticated }) => {
         </h1>
       </div>
 
-      {/* Navigation Links */}
+      
       <div className="flex items-center gap-8">
         <Link to="/" style={{ textDecoration: "none" }} className="no-underline">
           <span className="text-gray-300 hover:text-blue-400 font-medium cursor-pointer transition text-xl no-underline">

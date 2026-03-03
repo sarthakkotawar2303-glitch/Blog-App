@@ -9,22 +9,21 @@ import ReadMore from './home/PostDetails';
 import EditPost from './home/editPost';
 import MyPost from './home/myPosts';
 
-// Private route component
 const PrivateRoute = ({ isAuthenticated, setisAuthenticated }) => {
-  return isAuthenticated ? (
-    <>
+  if (!isAuthenticated) {
+    return <Navigate replace to='/login' />;
+  }
+  return (
+    <div id="page-wrapper" className="animate-page-in">
       <Header setisAuthenticated={setisAuthenticated} />
       <Outlet />
-    </>
-  ) : (
-    <Navigate replace to={'/login'} />
+    </div>
   );
 };
 
 function App() {
   const [isAuthenticated, setisAuthenticated] = useState(() => {
-    const token = localStorage.getItem("accessToken");
-    return token !== null;
+    return !!localStorage.getItem("accessToken");
   });
 
   return (
@@ -32,9 +31,12 @@ function App() {
       <Routes>
         <Route
           path='/login'
-          element={<Login setisAuthenticated={setisAuthenticated} />}
+          element={
+            isAuthenticated
+              ? <Navigate replace to='/' />
+              : <Login setisAuthenticated={setisAuthenticated} />
+          }
         />
-
         <Route
           element={
             <PrivateRoute

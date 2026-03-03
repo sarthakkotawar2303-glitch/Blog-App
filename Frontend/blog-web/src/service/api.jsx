@@ -2,15 +2,13 @@ import axios from "axios";
 import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from "../constants/config";
 import { getAccessToken, getType } from "../utils/common-utils.js";
 
-const API_URL = "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-// Axios instance
 const axiosInstance = axios.create({
   baseURL: API_URL,
   timeout: 10000,
 });
 
-// Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = getAccessToken();
@@ -20,13 +18,11 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor
 axiosInstance.interceptors.response.use(
   (response) => processResponse(response),
-  (error) => Promise.reject(processError(error))
+  (error) => Promise.resolve(processError(error))
 );
 
-// Success handler
 const processResponse = (response) => {
   if (response?.status === 200 || response?.status === 201) {
     return { isSuccess: true, data: response.data };
@@ -39,36 +35,39 @@ const processResponse = (response) => {
   };
 };
 
-// Error handler
 const processError = (error) => {
   if (error.response) {
-    if (error.response.status === 403) sessionStorage.clear();
+    if ([401, 403].includes(error.response.status)) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
+      if (getAccessToken()) {
+        window.location.href = "/login";
+      }
+    }
     return {
-      isError: true,
+      isSuccess: false,
       msg: error.response.data?.message || API_NOTIFICATION_MESSAGES.responseFailure,
       code: error.response.status,
     };
   }
   if (error.request) {
     return {
-      isError: true,
+      isSuccess: false,
       msg: API_NOTIFICATION_MESSAGES.requestFailure,
       code: "",
     };
   }
   return {
-    isError: true,
+    isSuccess: false,
     msg: API_NOTIFICATION_MESSAGES.networkError,
     code: "",
   };
 };
 
-// API methods
 const API = {};
 
 Object.keys(SERVICE_URLS).forEach((key) => {
   const value = SERVICE_URLS[key];
-
   API[key] = (body = {}, showUploadProgress, showDownloadProgress, customHeaders = {}) => {
     const isFormData = body instanceof FormData;
     const url = typeof value.url === "function" ? value.url(body.id || body.postId) : value.url;
@@ -78,6 +77,7 @@ Object.keys(SERVICE_URLS).forEach((key) => {
       method: value.method,
       url,
       data: value.method !== "GET" ? dataToSend : undefined,
+      params: value.method === "GET" ? dataToSend : undefined,
       responseType: value.responseType,
       headers: {
         ...customHeaders,

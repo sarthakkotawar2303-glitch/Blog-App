@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { API } from "../service/api";
 import CommentSection from "./comments";
 import moment from "moment";
+import backgroundImage from '../assets/backgroundImage.png'; 
 
 const ReadMore = () => {
   const { id } = useParams();
@@ -31,76 +32,93 @@ const ReadMore = () => {
   }, [id]);
 
   if (loading) return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900">
-      <div className="animate-pulse text-blue-500 text-lg font-medium">Reading Post...</div>
-    </div>
-  );
-
-  if (error) return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900 text-red-500 px-4 text-center">
-      <div className="bg-red-500/10 p-6 rounded-2xl border border-red-500/20">{error}</div>
+    <div className="flex justify-center items-center min-h-screen bg-[#0b0f1a]">
+      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500"></div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-200 py-10 px-4">
-      {post && (
-        <article className="max-w-4xl mx-auto">
-          {/* Header Section */}
-          <header className="mb-8">
-            <span className="px-3 py-1 bg-blue-600 text-white text-xs font-bold uppercase rounded-full tracking-wider">
-              {post.category || "Article"}
-            </span>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white mt-4 mb-6 leading-tight">
-              {post.title}
-            </h1>
+    <div 
+      className="min-h-screen bg-fixed bg-cover bg-center bg-[#0b0f1a] font-sans"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="min-h-screen bg-[#0b0f1a]/90 py-20 px-6">
+        
+        {post && (
+          <article className="max-w-5xl mx-auto relative z-10">
 
-            {/* Enhanced Author Bar */}
-            <div className="flex items-center gap-4 py-6 border-y border-slate-800">
-              <div className="h-12 w-12 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl uppercase shadow-lg">
-                {post.author?.username?.charAt(0) || "U"}
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white font-semibold">
-                  {post.author?.username || "Anonymous Writer"}
-                </span>
-                <span className="text-slate-400 text-sm italic">
-                  {post.author?.email} • {moment(post.createdAt).format("LL")}
+            <header className="mb-16">
+              <div className="inline-block px-5 py-2 bg-blue-600/10 border border-blue-500/20 rounded-full mb-8">
+                <span className="text-blue-400 text-[11px] font-black uppercase tracking-[0.4em]">
+                  {post.category || "Insight"}
                 </span>
               </div>
-            </div>
-          </header>
+              
+              {/* Cleaned up Title Typography */}
+              <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight tracking-tight mb-10">
+                {post.title}
+              </h1>
 
-          {/* Cover Image with subtle shadow */}
-          {post.coverImage?.url && (
-            <div className="rounded-3xl overflow-hidden shadow-2xl mb-10 border border-slate-800">
-              <img
-                src={post.coverImage.url}
-                alt={post.title}
-                className="w-full h-auto max-h-[500px] object-cover"
-              />
-            </div>
-          )}
+              {/* --- STYLISH EXCERPT --- */}
+              {post.excerpt && (
+                <div className="max-w-4xl mb-12 border-l-2 border-blue-500/50 pl-8 py-1">
+                  <p className="text-slate-300 text-2xl md:text-3xl font-light italic leading-relaxed opacity-90">
+                    {post.excerpt}
+                  </p>
+                </div>
+              )}
 
-          {/* Main Content Body */}
-          <div className="prose prose-invert prose-lg max-w-none">
-            <div className="text-slate-300 leading-relaxed text-lg whitespace-pre-line bg-slate-800/30 p-6 md:p-10 rounded-3xl border border-slate-800">
-              {post.description}
-            </div>
-          </div>
+              <div className="flex items-center gap-6 py-10 border-y border-white/5">
+                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-black text-2xl shadow-xl">
+                  {post.author?.username?.charAt(0) || "S"}
+                </div>
+                <div>
+                  <p className="text-white text-lg font-bold tracking-tight">
+                    {post.author?.username || "ScribleSpace Author"}
+                  </p>
+                  <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">
+                    {moment(post.createdAt).format("MMMM Do, YYYY")} • 5 min read
+                  </p>
+                </div>
+              </div>
+            </header>
 
-          {/* Comments Section Container */}
-          <section className="mt-16 pt-10 border-t border-slate-800">
-            <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-               Conversation
-               <span className="h-1.5 w-1.5 bg-blue-500 rounded-full"></span>
-            </h3>
-            <div className="bg-slate-900/50 rounded-2xl p-2">
-               <CommentSection id={id} />
+            {post.coverImage?.url && (
+              <div className="rounded-[3rem] overflow-hidden shadow-2xl mb-20 border border-white/5 bg-slate-950">
+                <img
+                  src={post.coverImage.url}
+                  alt={post.title}
+                  className="w-full h-auto max-h-[700px] object-cover"
+                />
+              </div>
+            )}
+
+            {/* --- MAIN CONTENT: Clean & Large Typography --- */}
+            <div className="relative">
+              <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/5 p-12 md:p-24 rounded-[3.5rem] shadow-2xl">
+                <div className="prose prose-invert prose-2xl max-w-none">
+                  {/* Removed the big 'first-letter' font for a cleaner start */}
+                  <p className="text-slate-200 leading-[2] text-xl md:text-2xl font-normal whitespace-pre-line">
+                    {post.description}
+                  </p>
+                </div>
+              </div>
             </div>
-          </section>
-        </article>
-      )}
+
+            <section className="mt-32">
+              <div className="flex items-center gap-6 mb-12 px-4">
+                <h3 className="text-3xl font-bold text-white tracking-tight">Conversation</h3>
+                <div className="flex-grow h-px bg-white/10"></div>
+              </div>
+              
+              <div className="bg-white/[0.02] backdrop-blur-md rounded-[2.5rem] p-6 md:p-10 border border-white/5">
+                <CommentSection id={id} />
+              </div>
+            </section>
+            
+          </article>
+        )}
+      </div>
     </div>
   );
 };

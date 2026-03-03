@@ -3,12 +3,12 @@ const Cloudinary = require("../config/cloudinaryConfig");
 const uploadToCloudinary = async (filepath) => {
   try {
     const result = await Cloudinary.uploader.upload(filepath, {
-      folder: "blog-covers", // optional but recommended
+      folder: "blog-covers", 
     });
 
     return {
       url: result.secure_url,
-      publicId: result.public_id, //   key name
+      publicId: result.public_id, 
     };
   } catch (error) {
     console.error("Error while uploading to Cloudinary:", error);

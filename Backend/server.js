@@ -12,20 +12,19 @@ const commentRouter=require('./src/routes/commentsRoute')
 const app = express()
 const port = process.env.PORT || 8000
 
-
-
-//connect to db
+// connect to db
 connectToDb()
 
 
 //middleware
-//app.use(express.json())
-app.use(cors())
-app.use(bodyParser.json({ extended: true }))
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true
+}))
+app.use(express.json())
 
 
-//route
+//routes
 app.use('/auth', userRoutes)
 app.use('/posts', postRouter)
 app.use('/posts',commentRouter)

@@ -8,21 +8,17 @@ const SignUpUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Validate required fields
     if (!username || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ message: "User already exists" });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save user
     const user = new User({
       username,
       email,
@@ -49,33 +45,30 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate request
+  
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // Find user
+    
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Check if password exists
     if (!user.password) {
       return res.status(500).json({ message: "User password not found in DB" });
     }
 
-    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Generate tokens
     const accessToken = jwt.sign(
       { _id: user._id, username: user.username, email: user.email },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: "50m" }
+      { expiresIn: "59m" }
     );
 
     const refreshToken = jwt.sign(
@@ -84,13 +77,11 @@ const loginUser = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // Save refresh token
     await new Token({ token: refreshToken, user: user._id }).save();
 
     res.status(200).json({
       message: "Login successful",
       accessToken,
-      refreshToken,
       user: {
         _id: user._id,
         username: user.username,

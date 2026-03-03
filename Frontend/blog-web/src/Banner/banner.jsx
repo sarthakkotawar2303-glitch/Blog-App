@@ -1,40 +1,39 @@
 import { Link } from "react-router-dom";
 import bannerImage from '../assets/bannerImage.png';
 
-
 const Banner = () => {
-  const imageUrl =
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBjcc0etEoEnQFGfogr1ySkkV3Vatwvi8qCg&s";
-
   return (
-    <div className="relative w-full h-[25vh] md:h-[50vh] lg:h-[50vh]">
-      {/* Background Image */}
-      <img
-        src={bannerImage}
-        alt="Blog Banner"
-        className="w-full h-full object-cover brightness-90"
-      />
+    <section className="w-full py-12 px-6 flex items-center justify-center">
+      <div className="relative w-full max-w-7xl overflow-hidden rounded-[3.5rem] bg-[#0b0f1a] border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+        
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-[3000ms] hover:scale-105 opacity-40"
+          style={{ backgroundImage: `url(${bannerImage})` }}
+        />
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0f1a]/60 via-[#0b0f1a]/80 to-[#0b0f1a]/60" />
 
-      {/* Text */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 md:px-12">
-        <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white drop-shadow-lg mb-4 animate-fadeIn">
-          Share Your Story With The World
-        </h1>
+        <div className="relative z-10 flex flex-col items-center justify-center text-center py-24 px-10 md:px-24 mx-auto max-w-4xl">
+          
+          <h1 className="text-4xl md:text-7xl font-black text-white leading-[1.1] tracking-tighter mb-8">
+            Share Your Story <br /> With The World
+          </h1>
 
-        <p className="text-base md:text-lg lg:text-xl text-gray-200 max-w-2xl mb-6 animate-fadeIn delay-200">
-          Write. Publish. Inspire. Connect with readers and express your ideas.
-        </p>
+          <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed mb-12 opacity-80 max-w-2xl">
+            A decentralized ecosystem where your insights connect with a global audience of innovators. Turn your words into impact today.
+          </p>
 
-      <Link to={'/create'}>
-       <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105">
-          Start Writing
-        </button>
-      </Link>
+          <Link to={'/create'}>
+            <button className="px-12 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold uppercase text-[12px] tracking-widest rounded-full transition-all duration-300 shadow-xl shadow-blue-900/40 hover:scale-105 active:scale-95">
+              Start Writing
+            </button>
+          </Link>
+        </div>
+
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full"></div>
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full"></div>
       </div>
-    </div>
+    </section>
   );
 };
 
