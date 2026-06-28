@@ -10,7 +10,7 @@ const Header = ({ setisAuthenticated }) => {
     
       <div
         className="flex items-center gap-3 cursor-pointer"
-        onClick={() => navigate("/")}
+        onClick={() => navigate("/feed")}
       >
         <FiBookOpen size={42} className="text-blue-600 hover:text-blue-400 transition" />
         <h1 className="text-1.5xl font-Lora font-bold text-white tracking-wide hover:text-green-400 transition">
@@ -20,7 +20,7 @@ const Header = ({ setisAuthenticated }) => {
 
       
       <div className="flex items-center gap-8">
-        <Link to="/" style={{ textDecoration: "none" }} className="no-underline">
+        <Link to="/feed" style={{ textDecoration: "none" }} className="no-underline">
           <span className="text-gray-300 hover:text-blue-400 font-medium cursor-pointer transition text-xl no-underline">
             Home
           </span>

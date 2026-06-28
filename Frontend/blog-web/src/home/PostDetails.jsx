@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { API } from "../service/api";
+import toast from "react-hot-toast";
 import CommentSection from "./comments";
 import moment from "moment";
 import backgroundImage from '../assets/backgroundImage.png'; 
@@ -47,7 +48,7 @@ const ReadMore = () => {
   const handleLike = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-      if (!storedUser._id) return alert("Please login to like this post");
+      if (!storedUser._id) return toast.error("Please login to like this post");
 
       const response = await API.toggleLike({ id });
       if (response.isSuccess || response.data?.isLiked !== undefined) {
@@ -71,7 +72,7 @@ const ReadMore = () => {
   const handleBookmark = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-      if (!storedUser._id) return alert("Please login to save this post");
+      if (!storedUser._id) return toast.error("Please login to save this post");
 
       const response = await API.toggleBookmark({ id });
       if (response.isSuccess || response.data?.isSaved !== undefined) {
@@ -103,7 +104,7 @@ const ReadMore = () => {
         await navigator.share(shareData);
       } else {
         await navigator.clipboard.writeText(window.location.href);
-        alert("Link copied to clipboard!");
+        toast.success("Link copied to clipboard!");
       }
     } catch (err) {
       console.error("Error sharing:", err);

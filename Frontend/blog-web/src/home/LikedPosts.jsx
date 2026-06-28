@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API } from "../service/api";
+import toast from "react-hot-toast";
 import { FiEye, FiHeart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -39,10 +40,10 @@ const LikedPosts = () => {
           localStorage.setItem("user", JSON.stringify(storedUser));
         }
       } else {
-        alert(response?.data?.message || "Failed to remove like");
+        toast.error(response?.data?.message || "Failed to remove like");
       }
     } catch (err) {
-      alert(err.message || "Something went wrong");
+      toast.error(err.message || "Something went wrong");
     }
   };
 

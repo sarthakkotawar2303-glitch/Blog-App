@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API } from "../service/api";
+import toast from "react-hot-toast";
 import { FiEye, FiBookmark } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -39,10 +40,10 @@ const SavedPosts = () => {
           localStorage.setItem("user", JSON.stringify(storedUser));
         }
       } else {
-        alert(response?.data?.message || "Failed to remove post");
+        toast.error(response?.data?.message || "Failed to remove post");
       }
     } catch (err) {
-      alert(err.message || "Something went wrong");
+      toast.error(err.message || "Something went wrong");
     }
   };
 

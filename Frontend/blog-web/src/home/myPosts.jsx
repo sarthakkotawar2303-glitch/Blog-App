@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API } from "../service/api";
+import toast from "react-hot-toast";
 import { FiEdit, FiTrash2, FiEye, FiPlus } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -35,10 +36,10 @@ const MyPost = () => {
       if (response?.data?.success) {
         setMyposts((prev) => prev.filter((p) => p._id !== id));
       } else {
-        alert(response?.data?.message || "Failed to delete post");
+        toast.error(response?.data?.message || "Failed to delete post");
       }
     } catch (err) {
-      alert(err.message || "Something went wrong");
+      toast.error(err.message || "Something went wrong");
     }
   };
 

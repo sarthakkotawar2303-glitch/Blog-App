@@ -58,7 +58,7 @@ const Login = ({ setisAuthenticated }) => {
 
           animateAndLeave(() => {
             setisAuthenticated(true);
-            navigate("/", { replace: true });
+            navigate("/feed", { replace: true });
           });
         } else {
           setError("Signup successful but login data missing");
@@ -102,7 +102,7 @@ const Login = ({ setisAuthenticated }) => {
 
         animateAndLeave(() => {
           setisAuthenticated(true);
-          navigate("/", { replace: true });
+          navigate("/feed", { replace: true });
         });
 
       } else {
@@ -145,7 +145,7 @@ const Login = ({ setisAuthenticated }) => {
         )}
 
         {isLogin ? (
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form key="login" onSubmit={handleLogin} className="space-y-5 animate-page-in">
             <div className="relative">
               <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
@@ -158,13 +158,14 @@ const Login = ({ setisAuthenticated }) => {
             <div className="relative">
               <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
+                type={showPassword ? "text" : "password"}
                 name="password" value={login.password}
                 onChange={onLoginChange} required placeholder="Password"
                 className="w-full bg-black/40 border border-white/5 text-white rounded-xl pl-12 pr-12 py-3.5 outline-none focus:ring-2 focus:ring-blue-600/40 transition"
               />
               <button type="button" onClick={() => setShowPassword(prev => !prev)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-500 transition">
-                {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </button>
             </div>
 
@@ -184,7 +185,7 @@ const Login = ({ setisAuthenticated }) => {
 
         ) : (
 
-          <form onSubmit={handleSignup} className="space-y-5">
+          <form key="signup" onSubmit={handleSignup} className="space-y-5 animate-page-in">
             <div className="relative">
               <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
@@ -206,13 +207,14 @@ const Login = ({ setisAuthenticated }) => {
             <div className="relative">
               <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
+                type={showPassword ? "text" : "password"}
                 name="password" value={signUp.password}
                 onChange={onSignUpChange} required placeholder="Password"
                 className="w-full bg-black/40 border border-white/5 text-white rounded-xl pl-12 pr-12 py-3.5 outline-none focus:ring-2 focus:ring-blue-600/40 transition"
               />
               <button type="button" onClick={() => setShowPassword(prev => !prev)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-500 transition">
-                {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
               </button>
             </div>
 

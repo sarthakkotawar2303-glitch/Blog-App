@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { API } from "../service/api";
+import toast from "react-hot-toast";
 
 const CreatePost = () => {
   const postInitialValue = {
@@ -67,7 +68,7 @@ const CreatePost = () => {
         setPost(postInitialValue);
         setPreview(null);
         fileInputRef.current.value = "";
-        alert("Post created successfully!");
+        toast.success("Post created successfully!");
       } else {
         setError(response.msg || "Something went wrong!");
       }
