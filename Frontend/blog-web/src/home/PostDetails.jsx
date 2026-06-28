@@ -4,12 +4,17 @@ import { API } from "../service/api";
 import CommentSection from "./comments";
 import moment from "moment";
 import backgroundImage from '../assets/backgroundImage.png'; 
+import { FiShare2, FiHeart, FiBookmark } from "react-icons/fi";
 
 const ReadMore = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
 
   useEffect(() => {
     const fetchSinglePost = async () => {
@@ -19,6 +24,14 @@ const ReadMore = () => {
         const response = await API.getPostById({ id: id });
         if (response.data.success) {
           setPost(response.data.post);
+          setLikesCount(response.data.post.likes?.length || 0);
+
+
+          const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+          if (storedUser._id) {
+            setIsLiked(storedUser.likedPosts?.includes(id) || false);
+            setIsSaved(storedUser.savedPosts?.includes(id) || false);
+          }
         } else {
           setError(response.data.message || "Post not found");
         }
@@ -30,6 +43,72 @@ const ReadMore = () => {
     };
     if (id) fetchSinglePost();
   }, [id]);
+
+  const handleLike = async () => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!storedUser._id) return alert("Please login to like this post");
+
+      const response = await API.toggleLike({ id });
+      if (response.isSuccess || response.data?.isLiked !== undefined) {
+        const newlyLiked = response.data?.isLiked ?? !isLiked;
+        setIsLiked(newlyLiked);
+        setLikesCount(prev => newlyLiked ? prev + 1 : prev - 1);
+        
+
+        if (newlyLiked) {
+          storedUser.likedPosts = [...(storedUser.likedPosts || []), id];
+        } else {
+          storedUser.likedPosts = (storedUser.likedPosts || []).filter(p => p !== id);
+        }
+        localStorage.setItem("user", JSON.stringify(storedUser));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleBookmark = async () => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      if (!storedUser._id) return alert("Please login to save this post");
+
+      const response = await API.toggleBookmark({ id });
+      if (response.isSuccess || response.data?.isSaved !== undefined) {
+        const newlySaved = response.data?.isSaved ?? !isSaved;
+        setIsSaved(newlySaved);
+
+
+        if (newlySaved) {
+          storedUser.savedPosts = [...(storedUser.savedPosts || []), id];
+        } else {
+          storedUser.savedPosts = (storedUser.savedPosts || []).filter(p => p !== id);
+        }
+        localStorage.setItem("user", JSON.stringify(storedUser));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: post?.title,
+      text: post?.excerpt || "Check out this blog post!",
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      }
+    } catch (err) {
+      console.error("Error sharing:", err);
+    }
+  };
 
   if (loading) return (
     <div className="flex justify-center items-center min-h-screen bg-[#0b0f1a]">
@@ -68,17 +147,45 @@ const ReadMore = () => {
                 </div>
               )}
 
-              <div className="flex items-center gap-6 py-10 border-y border-white/5">
-                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-black text-2xl shadow-xl">
-                  {post.author?.username?.charAt(0) || "S"}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 py-10 border-y border-white/5">
+                <div className="flex items-center gap-6">
+                  <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-black text-2xl shadow-xl">
+                    {post.author?.username?.charAt(0) || "S"}
+                  </div>
+                  <div>
+                    <p className="text-white text-lg font-bold tracking-tight">
+                      {post.author?.username || "ScribleSpace Author"}
+                    </p>
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">
+                      {moment(post.createdAt).format("MMMM Do, YYYY")} • 5 min read
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white text-lg font-bold tracking-tight">
-                    {post.author?.username || "ScribleSpace Author"}
-                  </p>
-                  <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">
-                    {moment(post.createdAt).format("MMMM Do, YYYY")} • 5 min read
-                  </p>
+
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={handleLike}
+                    className={`flex items-center gap-2 px-5 py-2.5 border rounded-full font-medium transition ${isLiked ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-white/5 hover:bg-white/10 border-white/10 text-white'}`}
+                  >
+                    <FiHeart className={isLiked ? 'fill-current' : ''} />
+                    <span>{likesCount}</span>
+                  </button>
+
+                  <button 
+                    onClick={handleBookmark}
+                    className={`flex items-center gap-2 px-5 py-2.5 border rounded-full font-medium transition ${isSaved ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-white/5 hover:bg-white/10 border-white/10 text-white'}`}
+                  >
+                    <FiBookmark className={isSaved ? 'fill-current' : ''} />
+                    <span>Save</span>
+                  </button>
+
+                  <button 
+                    onClick={handleShare}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white font-medium transition"
+                  >
+                    <FiShare2 className="text-blue-400" />
+                    <span>Share</span>
+                  </button>
                 </div>
               </div>
             </header>

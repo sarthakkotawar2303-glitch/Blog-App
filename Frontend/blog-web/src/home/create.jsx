@@ -18,7 +18,7 @@ const CreatePost = () => {
 
   const fileInputRef = useRef(null);
 
-  // cleanup preview URL
+
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);

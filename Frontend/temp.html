@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Roadmap Demo</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
+        .card { background: white; padding: 2rem; border-radius: 12px; shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        button { background: #1b9b32; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #157a27; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Full-Stack Connection</h2>
+        <p id="status">Waiting for Backend...</p>
+        <button onclick="fetchData()">Check Server Status</button>
+    </div>
+
+    <script>
+        async function fetchData() {
+            const statusText = document.getElementById('status');
+            try {
+                // This mimics a Network request (HTTP)
+                const response = await fetch('http://localhost:3000/api/status');
+                const data = await response.json();
+                statusText.innerText = data.message;
+                statusText.style.color = "#1b9b32";
+            } catch (err) {
+                statusText.innerText = "Error: Server not running!";
+                statusText.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>

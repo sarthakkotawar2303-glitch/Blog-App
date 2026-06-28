@@ -12,7 +12,7 @@ const EditPost = () => {
     excerpt: "",
     description: "",
     category: "",
-    coverImage: null, // can be string (URL) or File
+    coverImage: null,
   });
 
   const [preview, setPreview] = useState(null);
@@ -20,7 +20,7 @@ const EditPost = () => {
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch post by ID
+
   useEffect(() => {
     if (!id || id === "undefined") return;
 
@@ -48,7 +48,7 @@ const EditPost = () => {
     fetchPost();
   }, [id]);
 
-  // Cleanup preview URL
+
   useEffect(() => {
     return () => preview && typeof preview !== "string" && URL.revokeObjectURL(preview);
   }, [preview]);

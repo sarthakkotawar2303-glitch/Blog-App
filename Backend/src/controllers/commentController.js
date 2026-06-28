@@ -1,6 +1,10 @@
 const Comments = require("../model/Comments");
 
-// Create a new comment
+/**
+ * @name createComment
+ * @description Creates a new comment for a specific blog post.
+ * @route POST /posts/:id/comments
+ */
 const createComment = async (req, res) => {
   try {
     const text = req.body.text?.trim();
@@ -35,7 +39,11 @@ const createComment = async (req, res) => {
   }
 };
 
-// Fetch all comments for a post
+/**
+ * @name allComments
+ * @description Fetches all comments associated with a specific blog post.
+ * @route GET /posts/:id/comments
+ */
 const allComments = async (req, res) => {
   try {
     const filter = req.params.id ? { post: req.params.id } : {};
@@ -59,7 +67,11 @@ const allComments = async (req, res) => {
   }
 };
 
-// Update a comment
+/**
+ * @name updateComments
+ * @description Updates an existing comment's text, given the user is the owner.
+ * @route PUT /posts/:id/comments
+ */
 const updateComments = async (req, res) => {
   try {
     const { commentId, text } = req.body;
@@ -91,7 +103,11 @@ const updateComments = async (req, res) => {
   }
 };
 
-// Delete a comment
+/**
+ * @name deleteComments
+ * @description Deletes a comment by ID, given the user is the owner.
+ * @route DELETE /posts/delete/:id
+ */
 const deleteComments = async (req, res) => {
   try {
     const { commentId } = req.body;

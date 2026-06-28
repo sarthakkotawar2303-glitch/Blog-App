@@ -32,6 +32,18 @@ const Header = ({ setisAuthenticated }) => {
           </span>
         </Link>
 
+        <Link to="/savedPosts" style={{ textDecoration: "none" }} className="no-underline">
+          <span className="text-gray-300 hover:text-blue-400 font-medium cursor-pointer transition text-xl no-underline">
+            Saved Posts
+          </span>
+        </Link>
+
+        <Link to="/likedPosts" style={{ textDecoration: "none" }} className="no-underline">
+          <span className="text-gray-300 hover:text-blue-400 font-medium cursor-pointer transition text-xl no-underline">
+            Liked Posts
+          </span>
+        </Link>
+
 
 
         {/*  */}

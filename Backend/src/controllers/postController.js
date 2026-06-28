@@ -2,7 +2,11 @@ const uploadToCloudinary = require("../helper/cloudinaryHelper");
 const CoverImage = require("../model/coverImage");
 const Post = require("../model/post");
 
-// Create a new post
+/**
+ * @name createPostController
+ * @description Creates a new blog post with a cover image.
+ * @route POST /posts/create
+ */
 const createPostController = async (req, res) => {
   try {
     if (!req.file) {
@@ -33,7 +37,11 @@ const createPostController = async (req, res) => {
   }
 };
 
-// Fetch all posts
+/**
+ * @name GetAllPost
+ * @description Fetches all blog posts, including author and cover image details.
+ * @route GET /posts/allPosts
+ */
 const GetAllPost = async (req, res) => {
   try {
     const posts = await Post.find({})
@@ -53,7 +61,11 @@ const GetAllPost = async (req, res) => {
   }
 };
 
-// Delete a post
+/**
+ * @name DeletePost
+ * @description Deletes a specific blog post by ID if the requesting user is the author.
+ * @route DELETE /posts/deletePost/:id
+ */
 const DeletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -88,7 +100,11 @@ const DeletePost = async (req, res) => {
   }
 };
 
-// Update a post
+/**
+ * @name UpdatePost
+ * @description Updates an existing blog post by ID (title, excerpt, description, category, coverImage).
+ * @route PUT /posts/:id/updatePost
+ */
 const UpdatePost = async (req, res) => {
   try {
     const postId = req.params.id;
@@ -102,7 +118,6 @@ const UpdatePost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // Update fields if provided
     post.title = req.body.title ?? post.title;
     post.excerpt = req.body.excerpt ?? post.excerpt;
     post.description = req.body.description ?? post.description;
@@ -125,7 +140,11 @@ const UpdatePost = async (req, res) => {
   }
 };
 
-// Get single post
+/**
+ * @name SinglePost
+ * @description Fetches a single blog post by its ID with author and cover image details.
+ * @route GET /posts/getPost/:id
+ */
 const SinglePost = async (req, res) => { 
   try {
     const post = await Post.findById(req.params.id)
@@ -151,7 +170,11 @@ const SinglePost = async (req, res) => {
   }
 };
 
-// Get posts of logged-in user
+/**
+ * @name getMyPosts
+ * @description Retrieves all blog posts authored by the currently logged-in user.
+ * @route GET /posts/getMyPosts
+ */
 const getMyPosts = async (req, res) => {
   try {
     const myPosts = await Post.find({ author: req.user._id })
@@ -172,4 +195,38 @@ const getMyPosts = async (req, res) => {
   }
 };
 
-module.exports = { createPostController, GetAllPost, DeletePost, UpdatePost, SinglePost, getMyPosts };
+/**
+ * @name toggleLikePost
+ * @description Toggles like status on a post for a user (updates both Post and User models).
+ * @route PUT /posts/:id/like
+ */
+const toggleLikePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const User = require('../model/user');
+    const user = await User.findById(userId);
+
+    const isLiked = post.likes.includes(userId);
+
+    if (isLiked) {
+      await Post.findByIdAndUpdate(postId, { $pull: { likes: userId } });
+      await User.findByIdAndUpdate(userId, { $pull: { likedPosts: postId } });
+      res.status(200).json({ message: "Post unliked", isLiked: false });
+    } else {
+      await Post.findByIdAndUpdate(postId, { $push: { likes: userId } });
+      await User.findByIdAndUpdate(userId, { $push: { likedPosts: postId } });
+      res.status(200).json({ message: "Post liked successfully", isLiked: true });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to toggle like", error: error.message });
+  }
+};
+
+module.exports = { createPostController, GetAllPost, DeletePost, UpdatePost, SinglePost, getMyPosts, toggleLikePost };

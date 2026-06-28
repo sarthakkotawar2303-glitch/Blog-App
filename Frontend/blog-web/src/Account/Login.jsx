@@ -11,7 +11,7 @@ const Login = ({ setisAuthenticated }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [leaving, setLeaving] = useState(false); // ✅ controls exit animation
+  const [leaving, setLeaving] = useState(false);
 
   const [signUp, setSignUp] = useState({ username: "", email: "", password: "" });
   const [login, setLogin] = useState({ email: "", password: "" });
@@ -32,7 +32,6 @@ const Login = ({ setisAuthenticated }) => {
     setIsLogin(prev => !prev);
   };
 
-  // ✅ shared helper — plays exit animation then runs a callback
   const animateAndLeave = (callback) => {
     setLeaving(true);
     setTimeout(callback, 300);
@@ -57,7 +56,6 @@ const Login = ({ setisAuthenticated }) => {
           localStorage.setItem("user", JSON.stringify(user));
           setSignUp({ username: "", email: "", password: "" });
 
-          // ✅ exit animation then navigate
           animateAndLeave(() => {
             setisAuthenticated(true);
             navigate("/", { replace: true });

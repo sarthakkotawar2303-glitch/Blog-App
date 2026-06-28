@@ -8,6 +8,8 @@ import Create from './home/create';
 import ReadMore from './home/PostDetails';
 import EditPost from './home/editPost';
 import MyPost from './home/myPosts';
+import SavedPosts from './home/SavedPosts';
+import LikedPosts from './home/LikedPosts';
 
 const PrivateRoute = ({ isAuthenticated, setisAuthenticated }) => {
   if (!isAuthenticated) {
@@ -50,6 +52,8 @@ function App() {
           <Route path='/posts/:id' element={<ReadMore />} />
           <Route path='/edit-post/:id' element={<EditPost />} />
           <Route path='/myPosts' element={<MyPost />} />
+          <Route path='/savedPosts' element={<SavedPosts />} />
+          <Route path='/likedPosts' element={<LikedPosts />} />
         </Route>
       </Routes>
     </div>

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { API } from "../service/api";
 import { DataContext } from "../context/DataProvider";
 import { FiEdit, FiTrash2, FiCheck, FiX } from "react-icons/fi";
-import moment from "moment"; // for time formatting
+import moment from "moment";
 
 const CommentSection = ({ id }) => {
   const [comments, setComments] = useState([]);
@@ -17,7 +17,7 @@ const CommentSection = ({ id }) => {
   const { account } = useContext(DataContext);
   const currentUser = account || null;
 
-  // ================= Fetch Comments =================
+
   useEffect(() => {
     if (!id) return;
 
@@ -39,7 +39,7 @@ const CommentSection = ({ id }) => {
     fetchComments();
   }, [id]);
 
-  // ================= Add Comment =================
+
   const handleSubmit = async () => {
     if (!text.trim()) return;
 
@@ -55,7 +55,7 @@ const CommentSection = ({ id }) => {
     }
   };
 
-  // ================= Delete Comment =================
+
   const handleDelete = async (commentId) => {
     
     try {
@@ -66,14 +66,14 @@ const CommentSection = ({ id }) => {
     } catch {}
   };
 
-  // ================= Edit Comment =================
+
   const handleEditSubmit = async (commentId) => {
     if (!editingText.trim()) return;
 
     setEditingLoading(true);
     try {
       const res = await API.updateComment({
-        id, // post ID
+        id,
         data: { commentId, text: editingText.trim() },
       });
 

@@ -23,11 +23,11 @@ export const API_NOTIFICATION_MESSAGES = {
 
 export const SERVICE_URLS = {
 
-  //login  
+
   userSignup: { url: '/auth/signup', method: 'POST' },
   userLogin: { url: '/auth/login', method: 'POST' },
   
-  //posts
+
   publishBlog: { url: '/posts/create', method: 'POST' },
   Posts: { url: '/posts/allPosts', method: 'GET' },
   getPostById: { url: (id) => `/posts/getPost/${id}`, method: 'GET' },
@@ -35,9 +35,15 @@ export const SERVICE_URLS = {
   updatePost: { url: (id) => `/posts/${id}/updatePost`, method: "PUT", params: true },
   myPosts: { url: `/posts/getMyPosts`, method: "GET" },
 
-  //comments
+
   addComment: { url: (id) => `/posts/${id}/comments`, method: "POST", hasParams: true },
   getComments: { url: (id) => `/posts/${id}/comments`, method: "GET" },
   updateComment: { url: (id) => `/posts/${id}/comments`, method: "PUT", hasParams: true },
   deleteComment: { url: (id) => `/posts/delete/${id}`, method: "DELETE" },
+
+
+  toggleLike: { url: (id) => `/posts/${id}/like`, method: "PUT" },
+  toggleBookmark: { url: (id) => `/auth/bookmark/${id}`, method: "PUT" },
+  getSavedPosts: { url: `/auth/savedPosts`, method: "GET" },
+  getLikedPosts: { url: `/auth/likedPosts`, method: "GET" },
 };
